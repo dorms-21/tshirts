@@ -1,0 +1,229 @@
+/* ---------- Base ---------- */
+:root{
+  --bg:#0b0b0f;
+  --panel: rgba(255,255,255,.10);
+  --panel2: rgba(255,255,255,.07);
+  --border: rgba(255,255,255,.18);
+  --text: #f2f2f2;
+  --muted: rgba(255,255,255,.75);
+  --accent: #ffffff;
+  --shadow: 0 18px 50px rgba(0,0,0,.55);
+  --radius: 18px;
+  --radius-lg: 24px;
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  color: var(--text);
+  background: var(--bg);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+}
+
+/* Tipografía tipo “gótica” para títulos */
+@font-face{
+  font-family: "Unifraktur";
+  src: local("UnifrakturMaguntia");
+}
+.title-font{
+  font-family: "Unifraktur", "Georgia", serif;
+  letter-spacing: 2px;
+}
+
+/* ---------- Fondo tipo mármol (sin imagen) ---------- */
+.bg-marble{
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(1200px 700px at 15% 20%, rgba(255,255,255,.12), transparent 60%),
+    radial-gradient(900px 600px at 85% 30%, rgba(255,255,255,.10), transparent 55%),
+    linear-gradient(180deg, #05050a 0%, #0b0b10 45%, #06060b 100%);
+}
+
+/* Líneas “neón” suaves como en tu catálogo */
+.bg-marble::before{
+  content:"";
+  position:absolute; inset:-40%;
+  background:
+    conic-gradient(from 210deg at 50% 50%,
+      rgba(255,255,255,.0) 0deg,
+      rgba(255,255,255,.12) 40deg,
+      rgba(255,255,255,.0) 80deg,
+      rgba(255,255,255,.10) 140deg,
+      rgba(255,255,255,.0) 220deg,
+      rgba(255,255,255,.12) 300deg,
+      rgba(255,255,255,.0) 360deg);
+  filter: blur(28px);
+  opacity:.35;
+  transform: rotate(-12deg);
+  pointer-events:none;
+}
+
+/* Si quieres usar una imagen real de mármol:
+   ponla en internal/web/static/img/marble.jpg
+   y agrega esta clase al contenedor en vez de bg-marble
+*/
+.bg-image{
+  min-height:100vh;
+  background: url("/static/img/marble.jpg") center/cover no-repeat fixed;
+  position: relative;
+}
+.bg-image::before{
+  content:"";
+  position:absolute; inset:0;
+  background: rgba(0,0,0,.55);
+  pointer-events:none;
+}
+.bg-image > *{ position: relative; }
+
+/* ---------- Layout ---------- */
+.container{
+  width: min(1150px, 92vw);
+  margin: 0 auto;
+  padding: 28px 0 50px;
+}
+
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 14px 18px;
+  border:1px solid var(--border);
+  background: rgba(0,0,0,.25);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.brand{
+  font-size: 34px;
+  text-transform: uppercase;
+  text-shadow: 0 8px 30px rgba(0,0,0,.6);
+}
+
+.nav a{
+  color: var(--text);
+  text-decoration:none;
+  margin-left: 14px;
+  opacity:.85;
+}
+.nav a:hover{ opacity:1; text-decoration: underline; }
+
+.breadcrumbs{
+  margin: 14px 0 10px;
+  opacity: .9;
+}
+.breadcrumbs a{ color: var(--muted); text-decoration:none; }
+.breadcrumbs a:hover{ text-decoration:underline; }
+.breadcrumbs strong{ color: var(--text); }
+
+/* ---------- Cards ---------- */
+.card{
+  border:1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Login (centrado) ---------- */
+.auth-wrap{
+  min-height: calc(100vh - 110px);
+  display:grid;
+  place-items:center;
+  padding: 20px 0 40px;
+}
+
+.auth-card{
+  width: min(420px, 92vw);
+  padding: 26px 22px 20px;
+  text-align:center;
+}
+
+.auth-card h1{
+  margin: 2px 0 14px;
+  font-size: 28px;
+}
+
+.input{
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border:1px solid rgba(255,255,255,.22);
+  background: rgba(0,0,0,.28);
+  color: var(--text);
+  outline:none;
+  margin: 8px 0;
+}
+.input:focus{
+  border-color: rgba(255,255,255,.45);
+}
+
+.btn{
+  width:100%;
+  padding: 12px 14px;
+  border:0;
+  border-radius: 14px;
+  background: rgba(255,255,255,.92);
+  color:#111;
+  font-weight:700;
+  cursor:pointer;
+  margin-top: 10px;
+}
+.btn:hover{ filter: brightness(.96); }
+
+.err{
+  background: rgba(255, 60, 60, .18);
+  border: 1px solid rgba(255, 60, 60, .35);
+  padding: 10px 12px;
+  border-radius: 14px;
+  margin: 10px 0;
+}
+
+/* ---------- Grid de productos ---------- */
+.grid{
+  margin-top: 18px;
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+@media (max-width: 900px){ .grid{ grid-template-columns: repeat(2, 1fr);} }
+@media (max-width: 520px){ .grid{ grid-template-columns: 1fr;} }
+
+.product{
+  padding: 16px;
+  display:flex;
+  flex-direction:column;
+  gap: 10px;
+}
+.product .img{
+  border-radius: 16px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.25);
+  aspect-ratio: 1 / 1;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+}
+.product img{
+  width: 88%;
+  height: 88%;
+  object-fit: contain;
+  filter: drop-shadow(0 10px 18px rgba(0,0,0,.5));
+}
+.product .name{
+  font-weight:700;
+  letter-spacing:.3px;
+}
+.product .price{
+  opacity:.9;
+}
+
+.small-link{
+  color: var(--muted);
+  text-decoration:none;
+}
+.small-link:hover{ text-decoration:underline; }

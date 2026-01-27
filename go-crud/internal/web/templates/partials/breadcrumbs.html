@@ -1,0 +1,13 @@
+{{ define "breadcrumbs" }}
+<nav>
+  {{ range $i, $c := .Breadcrumbs }}
+    {{ if $i }} / {{ end }}
+    {{ if $c.Active }}
+      <strong>{{ $c.Label }}</strong>
+    {{ else }}
+      <a href="{{ $c.Href }}">{{ $c.Label }}</a>
+    {{ end }}
+  {{ end }}
+</nav>
+<hr>
+{{ end }}

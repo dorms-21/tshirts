@@ -1,0 +1,249 @@
+{{ define "profile/survey.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+  <style>
+    .step{ display:none; }
+    .step.active{ display:block; }
+
+    .cards2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+    .pick{
+      padding: 16px;
+      cursor:pointer;
+      user-select:none;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.18);
+      border-radius: 18px;
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 18px 50px rgba(0,0,0,.45);
+      transition: transform .08s ease, border-color .08s ease, background .08s ease;
+    }
+    .pick:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.35); }
+    .pick.selected{ border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.14); }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 900px){ .mini-grid{ grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 520px){ .mini-grid{ grid-template-columns: 1fr;} }
+
+    .mini{
+      padding: 12px;
+      border-radius: 16px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.22);
+      cursor:pointer;
+      transition: transform .08s ease, border-color .08s ease, background .08s ease;
+      text-align:center;
+    }
+    .mini:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.35); }
+    .mini.selected{ border-color: rgba(255,255,255,.55); background: rgba(255,255,255,.12); }
+    .mini .t{ font-weight:800; }
+    .mini .d{ opacity:.78; font-size:12px; margin-top:4px; }
+
+    .row-title{ margin: 18px 0 6px; font-weight:800; opacity:.9; }
+    .actions{ display:flex; gap:10px; justify-content:space-between; margin-top:18px; }
+    .btn2{
+      width:auto;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.28);
+      color: var(--text);
+      cursor:pointer;
+      font-weight:700;
+    }
+    .btn2:hover{ border-color: rgba(255,255,255,.45); }
+    .btnPrimary{
+      width:auto;
+      padding: 10px 14px;
+      border-radius: 14px;
+      border:0;
+      background: rgba(255,255,255,.92);
+      color:#111;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .btnPrimary:hover{ filter:brightness(.96); }
+  </style>
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand title-font">T-SHITS</div>
+        <div class="nav">
+          <a href="/shop">Tienda</a>
+          <a href="/profile/survey">Perfil</a>
+          <a href="/admin/products">Admin</a>
+        </div>
+      </div>
+
+      <div class="card" style="padding:18px; margin-top:18px">
+        <h1 class="title-font" style="margin:0 0 6px">Conócete</h1>
+        <p style="opacity:.82; margin:0 0 8px">
+          Responde esto para crear un perfil y recomendarte artículos con más precisión.
+        </p>
+
+        <form method="post" action="/profile/survey" id="surveyForm">
+
+          <!-- valores -->
+          <input type="hidden" name="gender" id="genderVal">
+          <input type="hidden" name="style" id="styleVal">
+          <input type="hidden" name="colors" id="colorsVal">
+          <input type="hidden" name="fit" id="fitVal">
+          <input type="hidden" name="occasion" id="occasionVal">
+
+          <!-- Step 1 -->
+          <div class="step active" id="step1">
+            <div class="row-title">1) Género</div>
+            <div class="cards2">
+              <div class="pick" data-pick="gender" data-value="hombre">
+                <div class="title-font" style="font-size:22px">Hombre</div>
+                <div style="opacity:.78; font-size:12px; margin-top:6px">Cortes y estilos masculinos</div>
+              </div>
+              <div class="pick" data-pick="gender" data-value="mujer">
+                <div class="title-font" style="font-size:22px">Mujer</div>
+                <div style="opacity:.78; font-size:12px; margin-top:6px">Cortes y estilos femeninos</div>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a class="btn2" href="/shop" style="text-decoration:none; display:inline-block">Cancelar</a>
+              <button type="button" class="btnPrimary" id="next1" disabled>Siguiente</button>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="step" id="step2">
+            <div class="row-title">2) Localidad</div>
+            <p style="opacity:.8; margin:6px 0">¿De qué ciudad/estado eres? (para clima/tendencias)</p>
+            <input class="input" name="location" placeholder="Ej: CDMX, Estado de México, Querétaro..." required>
+
+            <div class="actions">
+              <button type="button" class="btn2" id="back2">Atrás</button>
+              <button type="button" class="btnPrimary" id="next2">Siguiente</button>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="step" id="step3">
+            <div class="row-title">3) Preferencias</div>
+            <p style="opacity:.82; margin:6px 0 10px">Elige 1 opción por cada fila.</p>
+
+            <div class="row-title">Estilo principal</div>
+            <div class="mini-grid">
+              <div class="mini" data-pick="style" data-value="casual"><div class="t">Casual</div><div class="d">Cómodo y diario</div></div>
+              <div class="mini" data-pick="style" data-value="streetwear"><div class="t">Streetwear</div><div class="d">Urbano y moderno</div></div>
+              <div class="mini" data-pick="style" data-value="formal"><div class="t">Formal</div><div class="d">Elegante y sobrio</div></div>
+              <div class="mini" data-pick="style" data-value="deportivo"><div class="t">Deportivo</div><div class="d">Sport / gym</div></div>
+            </div>
+
+            <div class="row-title">Colores preferidos</div>
+            <div class="mini-grid">
+              <div class="mini" data-pick="colors" data-value="neutros"><div class="t">Neutros</div><div class="d">Blanco/Negro/Gris</div></div>
+              <div class="mini" data-pick="colors" data-value="oscuros"><div class="t">Oscuros</div><div class="d">Negro/Azul/Verde</div></div>
+              <div class="mini" data-pick="colors" data-value="vivos"><div class="t">Vivos</div><div class="d">Rojo/Amarillo/etc</div></div>
+              <div class="mini" data-pick="colors" data-value="pastel"><div class="t">Pastel</div><div class="d">Suaves y claros</div></div>
+            </div>
+
+            <div class="row-title">Ajuste favorito</div>
+            <div class="mini-grid">
+              <div class="mini" data-pick="fit" data-value="slim"><div class="t">Slim</div><div class="d">Más pegado</div></div>
+              <div class="mini" data-pick="fit" data-value="regular"><div class="t">Regular</div><div class="d">Normal</div></div>
+              <div class="mini" data-pick="fit" data-value="oversized"><div class="t">Oversized</div><div class="d">Amplio</div></div>
+              <div class="mini" data-pick="fit" data-value="comfort"><div class="t">Comfort</div><div class="d">Relajado</div></div>
+            </div>
+
+            <div class="row-title">¿Para qué ocasión compras más?</div>
+            <div class="mini-grid">
+              <div class="mini" data-pick="occasion" data-value="diario"><div class="t">Diario</div><div class="d">Uso de todos los días</div></div>
+              <div class="mini" data-pick="occasion" data-value="escuela"><div class="t">Escuela/Trabajo</div><div class="d">Presentable</div></div>
+              <div class="mini" data-pick="occasion" data-value="fiesta"><div class="t">Fiesta</div><div class="d">Más llamativo</div></div>
+              <div class="mini" data-pick="occasion" data-value="gym"><div class="t">Gym</div><div class="d">Deportivo</div></div>
+            </div>
+
+            <div class="actions">
+              <button type="button" class="btn2" id="back3">Atrás</button>
+              <button type="submit" class="btnPrimary" id="finish" disabled>Guardar perfil</button>
+            </div>
+
+            <p style="opacity:.7; font-size:12px; margin-top:10px">
+              (Luego usaremos estos datos para recomendar productos y personalizar el catálogo)
+            </p>
+          </div>
+
+        </form>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const steps = [document.getElementById('step1'), document.getElementById('step2'), document.getElementById('step3')];
+    const next1 = document.getElementById('next1');
+    const next2 = document.getElementById('next2');
+    const back2 = document.getElementById('back2');
+    const back3 = document.getElementById('back3');
+    const finish = document.getElementById('finish');
+
+    const genderVal = document.getElementById('genderVal');
+    const styleVal = document.getElementById('styleVal');
+    const colorsVal = document.getElementById('colorsVal');
+    const fitVal = document.getElementById('fitVal');
+    const occasionVal = document.getElementById('occasionVal');
+
+    function showStep(n){
+      steps.forEach((s,i)=>s.classList.toggle('active', i===n));
+    }
+
+    function setPicked(group, value){
+      if(group === 'gender') genderVal.value = value;
+      if(group === 'style') styleVal.value = value;
+      if(group === 'colors') colorsVal.value = value;
+      if(group === 'fit') fitVal.value = value;
+      if(group === 'occasion') occasionVal.value = value;
+      validate();
+    }
+
+    function validate(){
+      next1.disabled = !genderVal.value;
+      const okPrefs = styleVal.value && colorsVal.value && fitVal.value && occasionVal.value;
+      finish.disabled = !okPrefs;
+    }
+
+    document.querySelectorAll('[data-pick]').forEach(el=>{
+      el.addEventListener('click', ()=>{
+        const group = el.getAttribute('data-pick');
+        const value = el.getAttribute('data-value');
+
+        // deseleccionar grupo
+        document.querySelectorAll(`[data-pick="${group}"]`).forEach(x=>x.classList.remove('selected'));
+        el.classList.add('selected');
+
+        setPicked(group, value);
+      });
+    });
+
+    next1.addEventListener('click', ()=>showStep(1));
+    next2.addEventListener('click', ()=>showStep(2));
+    back2.addEventListener('click', ()=>showStep(0));
+    back3.addEventListener('click', ()=>showStep(1));
+    validate();
+  </script>
+</body>
+</html>
+{{ end }}

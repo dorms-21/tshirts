@@ -1,0 +1,61 @@
+{{ define "shop/detail.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand title-font">T-SHITS</div>
+        <div class="nav">
+          <a href="/shop">Tienda</a>
+          <a href="/profile/survey">Perfil</a>
+          <a href="/admin/products">Admin</a>
+          <a href="/login">Login</a>
+        </div>
+      </div>
+
+      <div class="breadcrumbs">
+        {{ template "breadcrumbs" . }}
+      </div>
+
+      <div class="card" style="padding:18px">
+        <h1 class="title-font" style="margin:4px 0 10px">{{ .Product.Name }}</h1>
+
+        <div style="display:grid; grid-template-columns: 280px 1fr; gap:18px; align-items:start">
+          <div class="img" style="aspect-ratio:1/1; border-radius:18px; border:1px solid rgba(255,255,255,.14); background: rgba(0,0,0,.25); display:grid; place-items:center; overflow:hidden">
+            {{ if .Product.ImagePath }}
+              <img src="{{ .Product.ImagePath }}" alt="{{ .Product.Name }}" style="width:88%;height:88%;object-fit:contain">
+            {{ else }}
+              <span style="opacity:.7">Sin imagen</span>
+            {{ end }}
+          </div>
+
+          <div>
+            <div style="font-size:22px; font-weight:800; opacity:.95; margin-bottom:8px">
+              ${{ money .Product.PriceCents }}
+            </div>
+            <p style="opacity:.85; margin-top:0">{{ .Product.Description }}</p>
+
+            <div style="display:flex; gap:10px; margin-top:14px">
+              <a class="btn" style="display:inline-block; width:auto; text-decoration:none; padding:10px 16px" href="/shop">Volver</a>
+              <a class="btn" style="display:inline-block; width:auto; text-decoration:none; padding:10px 16px" href="/profile/survey">Mejorar recomendaciones</a>
+            </div>
+
+            <p style="opacity:.7; margin-top:10px; font-size:12px">
+              (Luego aquí conectamos “Agregar al carrito” y checkout)
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+{{ end }}
