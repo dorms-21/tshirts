@@ -1,0 +1,43 @@
+{{ define "admin/products_edit.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand title-font">T-SHITS</div>
+        <div class="nav">
+          <a href="/shop">Tienda</a>
+          <a href="/admin/products">Admin</a>
+        </div>
+      </div>
+
+      <div class="breadcrumbs">
+        {{ template "breadcrumbs" . }}
+      </div>
+
+      <div class="card" style="padding:18px">
+        <h1 class="title-font" style="margin:4px 0 12px">Editar producto</h1>
+
+        <form method="post" action="/admin/products/{{ .Product.ID }}/edit">
+          <input class="input" name="name" value="{{ .Product.Name }}" placeholder="Nombre">
+          <textarea class="input" name="description" placeholder="Descripción" style="min-height:110px">{{ .Product.Description }}</textarea>
+          <input class="input" name="price_cents" value="{{ .Product.PriceCents }}" placeholder="Precio en centavos">
+          <input class="input" name="stock" value="{{ .Product.Stock }}" placeholder="Stock">
+
+          <button class="btn" type="submit">Guardar</button>
+          <p style="margin-top:10px"><a class="small-link" href="/admin/products">Volver</a></p>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+{{ end }}

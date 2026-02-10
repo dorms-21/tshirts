@@ -1,0 +1,45 @@
+{{ define "auth/login.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand title-font">T-SHITS</div>
+        <div class="nav">
+          <a href="/shop">Tienda</a>
+          <a href="/register">Registro</a>
+        </div>
+      </div>
+
+      <div class="auth-wrap">
+        <div class="auth-card card">
+          <h1 class="title-font">Inicia Sesión</h1>
+
+          {{ if .Error }}
+            <div class="err">{{ .Error }}</div>
+          {{ end }}
+
+          <form method="post" action="/login">
+            <input class="input" name="email" type="email" placeholder="Usuario (email)">
+            <input class="input" name="password" type="password" placeholder="Contraseña">
+            <button class="btn" type="submit">Entrar</button>
+          </form>
+
+          <p style="margin-top:12px">
+            <a class="small-link" href="/register">Crear cuenta</a>
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+{{ end }}

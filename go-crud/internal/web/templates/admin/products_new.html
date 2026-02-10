@@ -25,11 +25,30 @@
       <div class="card" style="padding:18px">
         <h1 class="title-font" style="margin:4px 0 12px">Nuevo producto</h1>
 
-        <form method="post" action="/admin/products">
-          <input class="input" name="name" placeholder="Nombre">
-          <textarea class="input" name="description" placeholder="Descripción" style="min-height:110px"></textarea>
-          <input class="input" name="price_cents" placeholder="Precio en centavos (ej. 1299)" value="1299">
-          <input class="input" name="stock" placeholder="Stock" value="10">
+        <form class="form-validate" method="post" action="/admin/products" novalidate>
+          <div class="field">
+            <input class="input" name="name" placeholder="Nombre"
+              required minlength="2" maxlength="90" data-trim>
+            <div class="field-error">Nombre requerido (2–90).</div>
+          </div>
+
+          <div class="field">
+            <textarea class="input" name="description" placeholder="Descripción" style="min-height:110px"
+              required minlength="10" maxlength="1000" data-trim></textarea>
+            <div class="field-error">Descripción requerida (10–1000).</div>
+          </div>
+
+          <div class="field">
+            <input class="input" name="price_cents" placeholder="Precio en centavos (ej. 1299)" value="1299"
+              type="number" required min="0" max="99999999" step="1" inputmode="numeric">
+            <div class="field-error">Precio inválido. Usa un número entero (centavos).</div>
+          </div>
+
+          <div class="field">
+            <input class="input" name="stock" placeholder="Stock" value="10"
+              type="number" required min="0" max="100000" step="1" inputmode="numeric">
+            <div class="field-error">Stock inválido (0–100000).</div>
+          </div>
 
           <button class="btn" type="submit">Crear</button>
           <p style="margin-top:10px"><a class="small-link" href="/admin/products">Volver</a></p>
@@ -38,6 +57,20 @@
 
     </div>
   </div>
+
+  <script>
+    // Validación HTML5 + estilos
+    document.querySelectorAll('form.form-validate').forEach(form => {
+      form.addEventListener('submit', (e) => {
+        form.classList.add('was-validated');
+        form.querySelectorAll('input[data-trim], textarea[data-trim]').forEach(i => i.value = i.value.trim());
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 {{ end }}

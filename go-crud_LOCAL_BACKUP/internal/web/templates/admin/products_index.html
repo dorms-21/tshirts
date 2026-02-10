@@ -1,0 +1,65 @@
+{{ define "admin/products_index.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand title-font">T-SHITS</div>
+        <div class="nav">
+          <a href="/shop">Tienda</a>
+          <a href="/admin/products">Admin</a>
+          <a href="/login">Login</a>
+        </div>
+      </div>
+
+      <div class="breadcrumbs">
+        {{ template "breadcrumbs" . }}
+      </div>
+
+      <div class="card" style="padding:18px">
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px">
+          <h1 class="title-font" style="margin:4px 0">Admin - Productos</h1>
+          <a class="btn" style="width:auto; text-decoration:none; padding:10px 16px" href="/admin/products/new">+ Nuevo</a>
+        </div>
+
+        <div style="overflow:auto; margin-top:12px">
+          <table border="0" cellpadding="10" style="width:100%; border-collapse:collapse">
+            <tr style="opacity:.9">
+              <th align="left">ID</th>
+              <th align="left">Nombre</th>
+              <th align="left">Precio</th>
+              <th align="left">Stock</th>
+              <th align="left">Acciones</th>
+            </tr>
+
+            {{ range .Products }}
+              <tr style="border-top:1px solid rgba(255,255,255,.12)">
+                <td>{{ .ID }}</td>
+                <td>{{ .Name }}</td>
+                <td>${{ money .PriceCents }}</td>
+                <td>{{ .Stock }}</td>
+                <td>
+                  <a class="small-link" href="/admin/products/{{ .ID }}/edit">Editar</a>
+                </td>
+              </tr>
+            {{ else }}
+              <tr style="border-top:1px solid rgba(255,255,255,.12)">
+                <td colspan="5" style="opacity:.8">Sin productos.</td>
+              </tr>
+            {{ end }}
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+{{ end }}

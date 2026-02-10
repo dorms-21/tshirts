@@ -26,10 +26,27 @@
             <div class="err">{{ .Error }}</div>
           {{ end }}
 
-          <form method="post" action="/register">
-            <input class="input" name="name" placeholder="Nombre">
-            <input class="input" name="email" type="email" placeholder="Email">
-            <input class="input" name="password" type="password" placeholder="Password">
+          <form class="form-validate" method="post" action="/register" novalidate>
+            <div class="field">
+              <input class="input" name="name" placeholder="Nombre"
+                required minlength="2" maxlength="80"
+                pattern="^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ][A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s'.-]{1,79}$"
+                data-trim autocomplete="name">
+              <div class="field-error">Nombre requerido (2–80). Solo letras y espacios.</div>
+            </div>
+
+            <div class="field">
+              <input class="input" name="email" type="email" placeholder="Email"
+                required maxlength="254" data-trim autocomplete="email">
+              <div class="field-error">Pon un email válido.</div>
+            </div>
+
+            <div class="field">
+              <input class="input" name="password" type="password" placeholder="Password"
+                required minlength="8" maxlength="72"
+                autocomplete="new-password">
+              <div class="field-error">La contraseña debe tener mínimo 8 caracteres.</div>
+            </div>
 
             <hr style="border-color:rgba(255,255,255,.12)">
 
@@ -37,7 +54,12 @@
               <strong>Captcha:</strong> {{ .CaptchaQ }}
             </p>
             <input type="hidden" name="captcha_token" value="{{ .CaptchaToken }}">
-            <input class="input" name="captcha_answer" placeholder="Respuesta">
+
+            <div class="field">
+              <input class="input" name="captcha_answer" placeholder="Respuesta"
+                required inputmode="numeric" pattern="^[0-9]{1,4}$" data-trim>
+              <div class="field-error">Captcha inválido. Responde con números (1–4 dígitos).</div>
+            </div>
 
             <button class="btn" type="submit">Crear cuenta</button>
           </form>
@@ -50,6 +72,20 @@
 
     </div>
   </div>
+
+  <script>
+    // Validación HTML5 + estilos
+    document.querySelectorAll('form.form-validate').forEach(form => {
+      form.addEventListener('submit', (e) => {
+        form.classList.add('was-validated');
+        form.querySelectorAll('input[data-trim], textarea[data-trim]').forEach(i => i.value = i.value.trim());
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 {{ end }}

@@ -1,0 +1,51 @@
+{{ define "shop/index.html" }}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container">
+
+      <div class="topbar">
+        <div class="brand title-font">T-SHITS</div>
+        <div class="nav">
+          <a href="/shop">Tienda</a>
+          <a href="/profile/survey">Perfil</a>
+          <a href="/admin/products">Admin</a>
+          <a href="/login">Login</a>
+        </div>
+      </div>
+
+      <div class="breadcrumbs">
+        {{ template "breadcrumbs" . }}
+      </div>
+
+      <div class="grid">
+        {{ range .Products }}
+          <a class="product card" href="/shop/{{ .ID }}" style="text-decoration:none;color:inherit">
+            <div class="img">
+              {{ if .ImagePath }}
+                <img src="{{ .ImagePath }}" alt="{{ .Name }}">
+              {{ else }}
+                <span style="opacity:.7">Sin imagen</span>
+              {{ end }}
+            </div>
+            <div class="name">{{ .Name }}</div>
+            <div class="price">${{ money .PriceCents }}</div>
+          </a>
+        {{ else }}
+          <div class="card product">
+            <div class="name">No hay productos todavía.</div>
+          </div>
+        {{ end }}
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+{{ end }}

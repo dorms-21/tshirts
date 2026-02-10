@@ -26,9 +26,19 @@
             <div class="err">{{ .Error }}</div>
           {{ end }}
 
-          <form method="post" action="/login">
-            <input class="input" name="email" type="email" placeholder="Usuario (email)">
-            <input class="input" name="password" type="password" placeholder="Contraseña">
+          <form class="form-validate" method="post" action="/login" novalidate>
+            <div class="field">
+              <input class="input" name="email" type="email" placeholder="Usuario (email)"
+                required maxlength="254" data-trim autocomplete="email">
+              <div class="field-error">Pon tu email (válido).</div>
+            </div>
+
+            <div class="field">
+              <input class="input" name="password" type="password" placeholder="Contraseña"
+                required minlength="1" maxlength="72" autocomplete="current-password">
+              <div class="field-error">Escribe tu contraseña.</div>
+            </div>
+
             <button class="btn" type="submit">Entrar</button>
           </form>
 
@@ -40,6 +50,20 @@
 
     </div>
   </div>
+
+  <script>
+    // Validación HTML5 + estilos
+    document.querySelectorAll('form.form-validate').forEach(form => {
+      form.addEventListener('submit', (e) => {
+        form.classList.add('was-validated');
+        form.querySelectorAll('input[data-trim], textarea[data-trim]').forEach(i => i.value = i.value.trim());
+        if (!form.checkValidity()) {
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
 {{ end }}
