@@ -14,7 +14,7 @@ import (
 
 func ShowRegister(c *gin.Context) {
 	q, t := NewCaptchaForForm(c)
-	c.HTML(http.StatusOK, "auth/register.html", gin.H{
+	Render(c, http.StatusOK, "auth/register.html", gin.H{
 		"Title": "Registro",
 		"Breadcrumbs": []Crumb{
 			{Label: "Tienda", Href: "/shop", Active: false},
@@ -32,7 +32,7 @@ func Register(c *gin.Context) {
 
 	if email == "" || name == "" || len(pass) < 6 {
 		q, t := NewCaptchaForForm(c)
-		c.HTML(http.StatusBadRequest, "auth/register.html", gin.H{
+		Render(c, http.StatusBadRequest, "auth/register.html", gin.H{
 			"Title":        "Registro",
 			"Error":        "Datos inválidos (password mínimo 6).",
 			"CaptchaQ":     q,
@@ -52,7 +52,7 @@ func Register(c *gin.Context) {
 	var existing models.User
 	if err := db.DB.Where("email = ?", email).First(&existing).Error; err == nil {
 		q, t := NewCaptchaForForm(c)
-		c.HTML(http.StatusBadRequest, "auth/register.html", gin.H{
+		Render(c, http.StatusBadRequest, "auth/register.html", gin.H{
 			"Title":        "Registro",
 			"Error":        "Ese correo ya existe.",
 			"CaptchaQ":     q,
@@ -71,7 +71,7 @@ func Register(c *gin.Context) {
 	}
 	if err := db.DB.Create(&u).Error; err != nil {
 		q, t := NewCaptchaForForm(c)
-		c.HTML(http.StatusInternalServerError, "auth/register.html", gin.H{
+		Render(c, http.StatusInternalServerError, "auth/register.html", gin.H{
 			"Title":        "Registro",
 			"Error":        "No se pudo crear el usuario.",
 			"CaptchaQ":     q,
@@ -90,7 +90,7 @@ func Register(c *gin.Context) {
 }
 
 func ShowLogin(c *gin.Context) {
-	c.HTML(http.StatusOK, "auth/login.html", gin.H{
+	Render(c, http.StatusOK, "auth/login.html", gin.H{
 		"Title": "Login",
 		"Breadcrumbs": []Crumb{
 			{Label: "Tienda", Href: "/shop", Active: false},
@@ -105,14 +105,14 @@ func Login(c *gin.Context) {
 
 	var u models.User
 	if err := db.DB.Where("email = ?", email).First(&u).Error; err != nil {
-		c.HTML(http.StatusUnauthorized, "auth/login.html", gin.H{
+		Render(c, http.StatusUnauthorized, "auth/login.html", gin.H{
 			"Title": "Login",
 			"Error": "Credenciales inválidas.",
 		})
 		return
 	}
 	if err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(pass)); err != nil {
-		c.HTML(http.StatusUnauthorized, "auth/login.html", gin.H{
+		Render(c, http.StatusUnauthorized, "auth/login.html", gin.H{
 			"Title": "Login",
 			"Error": "Credenciales inválidas.",
 		})

@@ -20,7 +20,7 @@ func AdminProductsIndex(c *gin.Context) {
 	var products []models.Product
 	db.DB.Order("id desc").Find(&products)
 
-	c.HTML(http.StatusOK, "admin/products_index.html", gin.H{
+	Render(c, http.StatusOK, "admin/products_index.html", gin.H{
 		"Title": "Admin - Productos",
 		"Breadcrumbs": []Crumb{
 			{Label: "Admin", Href: "/admin/products", Active: false},
@@ -31,7 +31,7 @@ func AdminProductsIndex(c *gin.Context) {
 }
 
 func AdminProductsNewForm(c *gin.Context) {
-	c.HTML(http.StatusOK, "admin/products_new.html", gin.H{
+	Render(c, http.StatusOK, "admin/products_new.html", gin.H{
 		"Title": "Admin - Nuevo Producto",
 		"Breadcrumbs": []Crumb{
 			{Label: "Admin", Href: "/admin/products", Active: false},
@@ -79,7 +79,7 @@ func AdminProductsEditForm(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "admin/products_edit.html", gin.H{
+	Render(c, http.StatusOK, "admin/products_edit.html", gin.H{
 		"Title": "Admin - Editar Producto",
 		"Breadcrumbs": []Crumb{
 			{Label: "Admin", Href: "/admin/products", Active: false},

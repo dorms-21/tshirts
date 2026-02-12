@@ -7,10 +7,24 @@
 </head>
 <body>
   <header>
-    <a href="/shop">Tienda</a> |
-    <a href="/admin/products">Admin</a>
+    <a href="/shop">Tienda</a>
+  
+    {{ if .CurrentUser }}
+      | <a href="/profile/survey">Perfil</a>
+      {{ if .CurrentUser.IsAdmin }}
+        | <a href="/admin/products">Admin</a>
+      {{ end }}
+      | <form method="post" action="/logout" style="display:inline">
+          <button type="submit">Salir</button>
+        </form>
+    {{ else }}
+      | <a href="/login">Login</a>
+      | <a href="/register">Registro</a>
+    {{ end }}
+  
     <hr>
   </header>
+  
 
   {{ template "breadcrumbs" . }}
 
