@@ -14,9 +14,19 @@
         <div class="brand title-font">T-SHITS</div>
         <div class="nav">
           <a href="/shop">Tienda</a>
-          <a href="/profile/survey">Perfil</a>
-          <a href="/admin/products">Admin</a>
-          <a href="/login">Login</a>
+
+          {{ if .CurrentUser }}
+            <a href="/profile/survey">Perfil</a>
+            {{ if .CurrentUser.IsAdmin }}
+              <a href="/admin/products">Admin</a>
+            {{ end }}
+            <form method="post" action="/logout" style="display:inline">
+              <button class="btn" type="submit" style="width:auto; padding:8px 12px; margin-top:0">Salir</button>
+            </form>
+          {{ else }}
+            <a href="/login">Login</a>
+            <a href="/register">Registro</a>
+          {{ end }}
         </div>
       </div>
 

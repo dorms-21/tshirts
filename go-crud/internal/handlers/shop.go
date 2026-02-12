@@ -13,7 +13,7 @@ func ShopIndex(c *gin.Context) {
 	var products []models.Product
 	db.DB.Where("active = true").Order("id desc").Find(&products)
 
-	c.HTML(http.StatusOK, "shop/index.html", gin.H{
+	Render (c, http.StatusOK, "shop/index.html", gin.H{
 		"Title": "Tienda",
 		"Breadcrumbs": []Crumb{
 			{Label: "Tienda", Href: "/shop", Active: true},
@@ -25,7 +25,7 @@ func ShopIndex(c *gin.Context) {
 func ShopDetail(c *gin.Context) {
 	var p models.Product
 	if err := db.DB.First(&p, c.Param("id")).Error; err != nil {
-		c.HTML(http.StatusNotFound, "errors/404.html", gin.H{
+		Render(c, http.StatusNotFound, "errors/404.html", gin.H{
 			"Title": "404",
 			"Breadcrumbs": []Crumb{
 				{Label: "Tienda", Href: "/shop", Active: false},

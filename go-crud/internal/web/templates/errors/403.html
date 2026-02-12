@@ -1,0 +1,22 @@
+{{ define "errors/403.html" }}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ .Title }}</title>
+  <link rel="stylesheet" href="/static/css/theme.css">
+</head>
+<body>
+  <div class="bg-marble">
+    <div class="container" style="padding-top:28px">
+      <div class="card" style="padding:18px">
+        <h1 class="title-font" style="margin:0 0 8px">Acceso restringido</h1>
+        <p style="opacity:.85; margin:0 0 14px">Solo administradores pueden entrar aquí.</p>
+        <a class="btn" href="/shop" style="display:inline-block; width:auto; text-decoration:none">Volver a la tienda</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+{{ end }}
