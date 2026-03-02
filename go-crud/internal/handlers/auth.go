@@ -69,6 +69,7 @@ func Register(c *gin.Context) {
 		PasswordHash: string(hash),
 		IsAdmin:      false,
 	}
+
 	if err := db.DB.Create(&u).Error; err != nil {
 		q, t := NewCaptchaForForm(c)
 		Render(c, http.StatusInternalServerError, "auth/register.html", gin.H{
@@ -82,8 +83,8 @@ func Register(c *gin.Context) {
 
 	// login automático
 	s := sessions.Default(c)
-	s.Set("user_id", u.ID)
-	s.Set("is_admin", u.IsAdmin)
+	s.Set("user_id", uint64(u.ID))  // 👈 IMPORTANTE: evitar uint directo
+	s.Set("is_admin", u.IsAdmin)    // opcional (compat)
 	_ = s.Save()
 
 	c.Redirect(http.StatusSeeOther, "/shop")
@@ -111,6 +112,7 @@ func Login(c *gin.Context) {
 		})
 		return
 	}
+
 	if err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(pass)); err != nil {
 		Render(c, http.StatusUnauthorized, "auth/login.html", gin.H{
 			"Title": "Login",
@@ -120,8 +122,8 @@ func Login(c *gin.Context) {
 	}
 
 	s := sessions.Default(c)
-	s.Set("user_id", u.ID)
-	s.Set("is_admin", u.IsAdmin)
+	s.Set("user_id", uint64(u.ID)) // 👈 IMPORTANTE
+	s.Set("is_admin", u.IsAdmin)   // opcional (compat)
 	_ = s.Save()
 
 	c.Redirect(http.StatusSeeOther, "/shop")

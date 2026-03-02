@@ -18,7 +18,6 @@ func RequireAuth(c *gin.Context) {
 }
 
 func RequireAdmin(c *gin.Context) {
-	// Validamos admin contra el usuario real (BD) para que coincida con navbar y permisos.
 	u := currentUserFromSession(c)
 	if u == nil {
 		c.Redirect(http.StatusSeeOther, "/login")

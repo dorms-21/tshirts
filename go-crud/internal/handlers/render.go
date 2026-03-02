@@ -1,6 +1,9 @@
 package handlers
 
 import (
+	"fmt"
+	"strconv"
+
 	"go-crud/internal/db"
 	"go-crud/internal/models"
 
@@ -15,15 +18,37 @@ func currentUserFromSession(c *gin.Context) *models.User {
 		return nil
 	}
 
-	var uid int64
+	var uid uint64
+
 	switch v := uidRaw.(type) {
-	case int64:
+	case uint:
+		uid = uint64(v)
+	case uint64:
 		uid = v
 	case int:
-		uid = int64(v)
+		if v < 0 {
+			return nil
+		}
+		uid = uint64(v)
+	case int64:
+		if v < 0 {
+			return nil
+		}
+		uid = uint64(v)
 	case float64:
-		uid = int64(v)
+		if v < 0 {
+			return nil
+		}
+		uid = uint64(v)
+	case string:
+		parsed, err := strconv.ParseUint(v, 10, 64)
+		if err != nil {
+			return nil
+		}
+		uid = parsed
 	default:
+		// útil para debug: ver qué tipo guardó la sesión
+		_ = fmt.Sprintf("unsupported user_id type: %T", uidRaw)
 		return nil
 	}
 
