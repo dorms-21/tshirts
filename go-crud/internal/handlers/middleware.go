@@ -18,9 +18,14 @@ func RequireAuth(c *gin.Context) {
 }
 
 func RequireAdmin(c *gin.Context) {
-	s := sessions.Default(c)
-	isAdmin, ok := s.Get("is_admin").(bool)
-	if !ok || !isAdmin {
+	// Validamos admin contra el usuario real (BD) para que coincida con navbar y permisos.
+	u := currentUserFromSession(c)
+	if u == nil {
+		c.Redirect(http.StatusSeeOther, "/login")
+		c.Abort()
+		return
+	}
+	if !u.IsAdmin {
 		c.String(http.StatusForbidden, "solo admin")
 		c.Abort()
 		return
